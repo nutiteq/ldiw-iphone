@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>first_server</key>
+	<string>http://intranet.letsdoitworld.org/?q=get-api-base-url.json</string>
+	<key>stringAdd</key>
+	<string>/wp.json</string>
+	<key>stringBBOX</key>
+	<string>/waste_points.csv&amp;max_results=%d&amp;BBOX=%@,%@,%@,%@</string>
+	<key>stringDetails</key>
+	<string>/wp/%@.html&amp;max_width=300</string>
+	<key>stringFields</key>
+	<string>/waste-point-extra-fields.json</string>
+	<key>stringLogin</key>
+	<string>/user/login.json</string>
+	<key>stringNearest</key>
+	<string>/waste_points.csv&amp;max_results=%d&amp;nearest_points_to=%@,%@</string>
+</dict>
+</plist>
