@@ -14,10 +14,13 @@
 #import "PointCell.h"
 #import "Do_ItViewController.h"
 #import <dispatch/dispatch.h>
+#import "TileOverlay.h"
+#import "TileOverlayView.h"
 
 @implementation MapListViewController
 
 @synthesize appDelegate, mapView, myTableView, nearestPoints, parent, pointViewController, segmentedControl, mapBackButton, mapRefreshButton, loadViewString, navBackButton, loadingBackground, loadingLabel, loadingActivityIndicator;
+@synthesize overlay;
 
 // The designated initializer.  Override if you create the controller programmatically and want to perform customization that is not appropriate for viewDidLoad.
 /*
@@ -179,6 +182,13 @@
     }
 }
 
+- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)ovl
+{
+    TileOverlayView *view = [[TileOverlayView alloc] initWithOverlay:ovl];
+    view.tileAlpha = 1.0; // e.g. 0.6 alpha for semi-transparent overlay
+    return [view autorelease];
+}
+
 #pragma mark - My methods
 
 - (void)backButtonPressed
@@ -258,6 +268,19 @@
 		[mapView addAnnotation:annotation];
 		[annotation release];
 	} 
+    
+    // add OpenStreetMap overlay
+    
+    overlay = [[TileOverlay alloc] initOverlay];
+    [mapView addOverlay:overlay];
+    MKMapRect visibleRect = [mapView mapRectThatFits:overlay.boundingMapRect];
+    visibleRect.size.width /= 2;
+    visibleRect.size.height /= 2;
+    visibleRect.origin.x += visibleRect.size.width / 2;
+    visibleRect.origin.y += visibleRect.size.height / 2;
+    mapView.visibleMapRect = visibleRect;
+
+    
 }
 
 #pragma mark -

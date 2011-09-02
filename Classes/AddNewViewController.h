@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import <MapKit/MapKit.h>
 #import "MapListViewController.h"
+#import "TileOverlay.h"
 
 @class Do_ItViewController;
 @class Do_ItAppDelegate;
@@ -55,6 +56,7 @@
 @property (nonatomic, retain) NSString *sessionName;
 @property (nonatomic, retain) IBOutlet UIView *loadingBackground;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingActivityIndicator;
+@property (nonatomic, retain) TileOverlay *overlay;
 
 - (void)add;
 - (void)backButtonPressed;

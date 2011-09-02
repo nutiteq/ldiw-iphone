@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		0C2FB215139F8278001373C6 /* CoordinateAnnotation.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C2FB214139F8278001373C6 /* CoordinateAnnotation.m */; };
+		0C45B6ED1410E9D400E40744 /* TileOverlay.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C45B6EA1410E9D400E40744 /* TileOverlay.m */; };
+		0C45B6EE1410E9D400E40744 /* TileOverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C45B6EC1410E9D400E40744 /* TileOverlayView.m */; };
 		0C83D85A139FC83800F1FD4F /* libFlurry.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0C83D859139FC83800F1FD4F /* libFlurry.a */; };
 		0C83D85F13A0D85F00F1FD4F /* UIImage+Tint.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C83D85B13A0D85F00F1FD4F /* UIImage+Tint.m */; };
 		0C83D86013A0D85F00F1FD4F /* UIImage+ProportionalFill.m in Sources */ = {isa = PBXBuildFile; fileRef = 0C83D85D13A0D85F00F1FD4F /* UIImage+ProportionalFill.m */; };
@@ -119,6 +121,10 @@
 /* Begin PBXFileReference section */
 		0C2FB213139F8277001373C6 /* CoordinateAnnotation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CoordinateAnnotation.h; sourceTree = "<group>"; };
 		0C2FB214139F8278001373C6 /* CoordinateAnnotation.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CoordinateAnnotation.m; sourceTree = "<group>"; };
+		0C45B6E91410E9D400E40744 /* TileOverlay.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TileOverlay.h; path = OSM/TileOverlay.h; sourceTree = SOURCE_ROOT; };
+		0C45B6EA1410E9D400E40744 /* TileOverlay.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TileOverlay.m; path = OSM/TileOverlay.m; sourceTree = SOURCE_ROOT; };
+		0C45B6EB1410E9D400E40744 /* TileOverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = TileOverlayView.h; path = OSM/TileOverlayView.h; sourceTree = SOURCE_ROOT; };
+		0C45B6EC1410E9D400E40744 /* TileOverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = TileOverlayView.m; path = OSM/TileOverlayView.m; sourceTree = SOURCE_ROOT; };
 		0C83D855139FC83800F1FD4F /* FlurryAdDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryAdDelegate.h; sourceTree = "<group>"; };
 		0C83D856139FC83800F1FD4F /* FlurryAPI+AppCircle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "FlurryAPI+AppCircle.h"; sourceTree = "<group>"; };
 		0C83D857139FC83800F1FD4F /* FlurryOffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlurryOffer.h; sourceTree = "<group>"; };
@@ -307,6 +313,7 @@
 		080E96DDFE201D6D7F000001 /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				0C45B6E71410E8B300E40744 /* OSM */,
 				0C83D85B13A0D85F00F1FD4F /* UIImage+Tint.m */,
 				0C83D85C13A0D85F00F1FD4F /* UIImage+Tint.h */,
 				0C83D85D13A0D85F00F1FD4F /* UIImage+ProportionalFill.m */,
@@ -346,6 +353,17 @@
 				0C2FB214139F8278001373C6 /* CoordinateAnnotation.m */,
 			);
 			path = Classes;
+			sourceTree = "<group>";
+		};
+		0C45B6E71410E8B300E40744 /* OSM */ = {
+			isa = PBXGroup;
+			children = (
+				0C45B6E91410E9D400E40744 /* TileOverlay.h */,
+				0C45B6EA1410E9D400E40744 /* TileOverlay.m */,
+				0C45B6EB1410E9D400E40744 /* TileOverlayView.h */,
+				0C45B6EC1410E9D400E40744 /* TileOverlayView.m */,
+			);
+			name = OSM;
 			sourceTree = "<group>";
 		};
 		0C83D853139FC83800F1FD4F /* FlurryLib */ = {
@@ -745,6 +763,8 @@
 				0C2FB215139F8278001373C6 /* CoordinateAnnotation.m in Sources */,
 				0C83D85F13A0D85F00F1FD4F /* UIImage+Tint.m in Sources */,
 				0C83D86013A0D85F00F1FD4F /* UIImage+ProportionalFill.m in Sources */,
+				0C45B6ED1410E9D400E40744 /* TileOverlay.m in Sources */,
+				0C45B6EE1410E9D400E40744 /* TileOverlayView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

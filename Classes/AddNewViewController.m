@@ -19,12 +19,14 @@
 #import "UIImage+ProportionalFill.h"
 #import <AssetsLibrary/AssetsLibrary.h>
 #import "PointAnnotation.h"
+#import "TileOverlay.h"
+#import "TileOverlayView.h"
 
 #define degreesToRadian(x) (M_PI * x / 180.0)
 
 @implementation AddNewViewController
 
-@synthesize parent, appDelegate, fieldsInfo, myTableView, switches, textEditViewController, collectedInfo, photo, imagePickerController, collectedData, sessionId, sessionName, loadingBackground, loadingActivityIndicator, mapView, imageLocation, mapListViewController;
+@synthesize parent, appDelegate, fieldsInfo, myTableView, switches, textEditViewController, collectedInfo, photo, imagePickerController, collectedData, sessionId, sessionName, loadingBackground, loadingActivityIndicator, mapView, imageLocation, mapListViewController,overlay;
 //sectionTitles
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
@@ -152,6 +154,7 @@
     {
         self.collectedData = [NSMutableDictionary dictionary];
     }
+    
 }
 
 - (void)viewDidUnload
@@ -366,6 +369,17 @@
             if(self.mapView == nil){
                 self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 300.0f, 120.0f)];
                 self.mapView.delegate=self;
+                
+                // OpenStreetMap based on http://wiki.openstreetmap.org/wiki/OSM_in_MapKit
+                overlay = [[TileOverlay alloc] initOverlay];
+                [mapView addOverlay:overlay];
+                MKMapRect visibleRect = [mapView mapRectThatFits:overlay.boundingMapRect];
+                visibleRect.size.width /= 2;
+                visibleRect.size.height /= 2;
+                visibleRect.origin.x += visibleRect.size.width / 2;
+                visibleRect.origin.y += visibleRect.size.height / 2;
+                mapView.visibleMapRect = visibleRect;
+                
                 //    self.mapView.mapType = MKMapTypeHybrid;
                 
             }
@@ -651,6 +665,12 @@
 	return pinView;
 }
 
+- (MKOverlayView *)mapView:(MKMapView *)mapView viewForOverlay:(id <MKOverlay>)ovl
+{
+    TileOverlayView *view = [[TileOverlayView alloc] initWithOverlay:ovl];
+    view.tileAlpha = 1.0; // e.g. 0.6 alpha for semi-transparent overlay
+    return [view autorelease];
+}
 
 /*
  // seems to be problematic with non-camera (library) images

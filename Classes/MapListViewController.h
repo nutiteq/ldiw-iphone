@@ -10,6 +10,7 @@
 #import <MapKit/MapKit.h>
 #import "Do_ItAppDelegate.h"
 #import "PointViewController.h"
+#import "TileOverlay.h"
 
 @class Do_ItViewController;
 
@@ -45,6 +46,7 @@
 @property (nonatomic, retain) IBOutlet UIView *loadingBackground;
 @property (nonatomic, retain) IBOutlet UILabel *loadingLabel;
 @property (nonatomic, retain) IBOutlet UIActivityIndicatorView *loadingActivityIndicator;
+@property (nonatomic, retain) TileOverlay *overlay;
 
 - (IBAction)switchViews;
 - (NSMutableArray *)getNearestPoints:(CLLocation *)center;
