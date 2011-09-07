@@ -350,7 +350,7 @@
         }];
 
         
-        NSLog(@"SORTED: \n%@", sortedArray);
+      //  NSLog(@"SORTED: \n%@", sortedArray);
         
         return [sortedArray mutableCopy];
     }

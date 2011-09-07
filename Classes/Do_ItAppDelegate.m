@@ -17,7 +17,8 @@
 	if([self isMemberOfClass:[UINavigationBar class]])
 	{
 		UIImage *image = [UIImage imageNamed:@"head.png"];
-		CGContextClip(ctx);
+        if(!CGContextIsPathEmpty(ctx))
+            CGContextClip(ctx);
 		CGContextTranslateCTM(ctx, 0, image.size.height);
 		CGContextScaleCTM(ctx, 1.0, -1.0);
 		CGContextDrawImage(ctx,
