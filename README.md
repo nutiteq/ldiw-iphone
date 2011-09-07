@@ -5,6 +5,7 @@ Report illegal waste/littering locations to Global Waste Map, contributing to Wo
 
 Application is available in iTunes for iPhone: http://itunes.apple.com/br/app/lets-do-it-world/id443259456?mt=8
 
+Server API description: http://intranet.letsdoitworld.org/node/15342
 
 Contributing
 ------------
