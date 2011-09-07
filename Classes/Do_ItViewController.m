@@ -540,6 +540,11 @@
 	UIImage *bigPhoto = [info objectForKey:UIImagePickerControllerOriginalImage];
 //    NSURL *url = [info objectForKey:UIImagePickerControllerReferenceURL];
     
+    if(picker.sourceType == UIImagePickerControllerSourceTypeCamera){
+        NSLog(@"writing to photo album");
+        UIImageWriteToSavedPhotosAlbum(bigPhoto, nil, nil, nil);
+    }
+    
     // try to find coordinates (from EXIF)
     ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
 

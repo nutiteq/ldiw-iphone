@@ -216,7 +216,11 @@
     
     // lat & lon
     
-    CLLocation* location = imageLocation.coordinate.latitude > 0 ? imageLocation : parent.locationManager.location;
+    NSLog(@"image location: %g %g",imageLocation.coordinate.latitude,imageLocation.coordinate.longitude);
+    NSLog(@"locationManager location: %g %g",parent.locationManager.location.coordinate.latitude,parent.locationManager.location.coordinate.longitude);
+    
+    CLLocation* location = abs(imageLocation.coordinate.latitude) > 0.1 && abs(imageLocation.coordinate.longitude)>0.1 ? 
+        imageLocation : parent.locationManager.location;
 
     NSString *lat = [NSString stringWithFormat:@"%g", location.coordinate.latitude];
 	NSString *lon = [NSString stringWithFormat:@"%g", location.coordinate.longitude];
@@ -235,16 +239,16 @@
         [self.collectedData setObject:status forKey:key];
     }
     
+     NSLog(@"%@", self.collectedData);
+    
     // photo
     if (self.photo) 
     {
         NSData *photoData = UIImageJPEGRepresentation(self.photo, 0.6f);
-        NSLog(@"photo size: %d",[photoData length]);
+        NSLog(@"adding photo size: %d",[photoData length]);
         [self.collectedData setObject:photoData forKey:@"photo_file_1"];    
     }
-    
-    NSLog(@"%@", self.collectedData);
-    
+        
     // sending the info
     NSString *fieldsStr = [appDelegate.settings objectForKey:@"stringAdd"];
     NSString *urlString = [NSString stringWithFormat:@"%@%@", self.parent.serverUrl, fieldsStr];
@@ -271,6 +275,7 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
                    {
                        [request startSynchronous];
+                       NSLog(@"res: %@",[request responseString]);
                        NSError *error = [request error];
                        if (!error)
                        {
@@ -282,7 +287,6 @@
                                               self.loadingBackground.alpha = 0.0;
                                               [UIView commitAnimations];
                                               
-                                              NSLog(@"%@", [request responseString]);
                                               UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Success!" 
                                                                                               message:@"New waste point added."
                                                                                              delegate:nil
@@ -373,13 +377,13 @@
                 // OpenStreetMap based on http://wiki.openstreetmap.org/wiki/OSM_in_MapKit
                 overlay = [[TileOverlay alloc] initOverlay];
                 [mapView addOverlay:overlay];
-                MKMapRect visibleRect = [mapView mapRectThatFits:overlay.boundingMapRect];
+              /*  MKMapRect visibleRect = [mapView mapRectThatFits:overlay.boundingMapRect];
                 visibleRect.size.width /= 2;
                 visibleRect.size.height /= 2;
                 visibleRect.origin.x += visibleRect.size.width / 2;
                 visibleRect.origin.y += visibleRect.size.height / 2;
                 mapView.visibleMapRect = visibleRect;
-                
+                */
                 //    self.mapView.mapType = MKMapTypeHybrid;
                 
             }
@@ -605,6 +609,11 @@
 	[picker dismissModalViewControllerAnimated:YES];
 	UIImage *bigPhoto = [info objectForKey:UIImagePickerControllerOriginalImage];
  
+    if(picker.sourceType == UIImagePickerControllerSourceTypeCamera){
+        NSLog(@"writing to photo album");
+        UIImageWriteToSavedPhotosAlbum(bigPhoto, nil, nil, nil);
+    }
+    
     self.photo = [bigPhoto imageScaledToFitSize:CGSizeMake(720, 540)];  
 
     // try to find coordinates (from EXIF)

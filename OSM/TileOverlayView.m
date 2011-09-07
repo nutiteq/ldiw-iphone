@@ -90,7 +90,7 @@
         
       //  UIImage *image = [[UIImage alloc] initWithContentsOfFile:tile.imagePath];
         NSString *path = [[NSString alloc] initWithFormat:@"http://tile.openstreetmap.org/%@.png", tile.imagePath];
-        NSLog(@"Loading tile from URL %@", path);
+       // NSLog(@"Loading tile from URL %@", path);
         UIImage *image =[UIImage imageWithData: [NSData   
                                                  dataWithContentsOfURL:[NSURL URLWithString: path]]];
         CGContextSaveGState(context);

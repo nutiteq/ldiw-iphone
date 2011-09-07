@@ -18,6 +18,7 @@
 #import "TileOverlayView.h"
 
 @implementation MapListViewController
+@synthesize osmLabel;
 
 @synthesize appDelegate, mapView, myTableView, nearestPoints, parent, pointViewController, segmentedControl, mapBackButton, mapRefreshButton, loadViewString, navBackButton, loadingBackground, loadingLabel, loadingActivityIndicator;
 @synthesize overlay;
@@ -97,6 +98,7 @@
 	{
 		[self.navigationController setNavigationBarHidden:YES];
 		self.mapView.alpha = 1;
+        self.osmLabel.alpha = 1;
 		self.myTableView.alpha = 0;
 		self.mapBackButton.hidden = NO;
 		self.mapRefreshButton.hidden = NO;
@@ -105,6 +107,7 @@
 	{
 		[self.navigationController setNavigationBarHidden:NO];
 		self.mapView.alpha = 0;
+        self.osmLabel.alpha = 0;
 		self.myTableView.alpha = 1;
 		self.mapBackButton.hidden = YES;
 		self.mapRefreshButton.hidden = YES;
@@ -273,12 +276,12 @@
     
     overlay = [[TileOverlay alloc] initOverlay];
     [mapView addOverlay:overlay];
-    MKMapRect visibleRect = [mapView mapRectThatFits:overlay.boundingMapRect];
+   /* MKMapRect visibleRect = [mapView mapRectThatFits:overlay.boundingMapRect];
     visibleRect.size.width /= 2;
     visibleRect.size.height /= 2;
     visibleRect.origin.x += visibleRect.size.width / 2;
     visibleRect.origin.y += visibleRect.size.height / 2;
-    mapView.visibleMapRect = visibleRect;
+    mapView.visibleMapRect = visibleRect;*/
 
     
 }
@@ -543,6 +546,7 @@
 
 - (void)viewDidUnload 
 {
+    [self setOsmLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;
@@ -579,6 +583,7 @@
     [loadingBackground release];
     [loadingLabel release];
     [loadingActivityIndicator release];
+    [osmLabel release];
     [super dealloc];
 }
 

@@ -30,8 +30,9 @@
     IBOutlet UIView *loadingBackground;
     IBOutlet UILabel *loadingLabel;
     IBOutlet UIActivityIndicatorView *loadingActivityIndicator;
+    UILabel *osmLabel;
 }
-
+@property (nonatomic, retain) IBOutlet UILabel *osmLabel;
 @property (nonatomic, retain) Do_ItAppDelegate *appDelegate;
 @property (nonatomic, retain) IBOutlet MKMapView *mapView;
 @property (nonatomic, retain) IBOutlet UITableView *myTableView;
