@@ -90,6 +90,36 @@
         [self.segmentedControl setSelectedSegmentIndex:0];
     }
     self.navigationItem.hidesBackButton = YES;
+    
+    NSLog(@"map: %@",[self.parent.settings valueForKey:@"map"]);
+    if([[self.parent.settings valueForKey:@"map"] isEqualToString: @"1"]  || [self.parent.settings valueForKey:@"map"] == nil){
+        // add OpenStreetMap overlay
+        if(overlay == nil){
+            overlay = [[TileOverlay alloc] initOverlay];
+        }
+        [mapView addOverlay:overlay];
+        self.osmLabel.alpha = 1;
+        
+    }
+    
+    if([[self.parent.settings valueForKey:@"map"] isEqualToString: @"2"]){
+        [mapView setMapType:MKMapTypeStandard];
+        if(overlay != nil){
+            [mapView removeOverlay: overlay];
+        }
+        self.osmLabel.alpha = 0;
+
+    }
+    
+    if([[self.parent.settings valueForKey:@"map"] isEqualToString: @"3"]){
+        [mapView setMapType:MKMapTypeHybrid];
+        if(overlay != nil){
+            [mapView removeOverlay: overlay];
+        }
+        self.osmLabel.alpha = 0;
+
+    }
+    
 }
 
 - (IBAction)switchViews
@@ -271,18 +301,6 @@
 		[mapView addAnnotation:annotation];
 		[annotation release];
 	} 
-    
-    // add OpenStreetMap overlay
-    
-    overlay = [[TileOverlay alloc] initOverlay];
-    [mapView addOverlay:overlay];
-   /* MKMapRect visibleRect = [mapView mapRectThatFits:overlay.boundingMapRect];
-    visibleRect.size.width /= 2;
-    visibleRect.size.height /= 2;
-    visibleRect.origin.x += visibleRect.size.width / 2;
-    visibleRect.origin.y += visibleRect.size.height / 2;
-    mapView.visibleMapRect = visibleRect;*/
-
     
 }
 
@@ -546,7 +564,6 @@
 
 - (void)viewDidUnload 
 {
-    [self setOsmLabel:nil];
     [super viewDidUnload];
     // Release any retained subviews of the main view.
     // e.g. self.myOutlet = nil;

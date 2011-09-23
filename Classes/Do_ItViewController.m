@@ -143,6 +143,11 @@
                                self.serverUrl = [resultsDictionary objectForKey:@"api_base_url"];
 //                               self.serverUrl = [NSString stringWithFormat:@"http://api.letsdoitworld.org/?q=api"]; // <--- TEST
                                NSLog(@"Server URL: %@", serverUrl);
+                               // cookie expired or lost?
+
+                               if([[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:url] == nil || [[[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:url] count] == 0){
+                                   [self.settings setValue:nil forKey:@"mail"];
+                               }
                                dispatch_async(dispatch_get_main_queue(), ^
                                               {
                                                   [UIView beginAnimations:nil context:nil];
@@ -208,9 +213,13 @@
     {
         self.settings = [NSMutableDictionary dictionary];
         [self.settings setValue:@"1" forKey:@"bbox"];
+        [self.settings setValue:@"1" forKey:@"map"];
         [self.settings setValue:@"10" forKey:@"max_results"];
         [self.settings writeToFile:path atomically:NO];
     }
+    
+
+        
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -304,6 +313,7 @@
 - (IBAction)addNew
 {
     /*
+     // force login (disabled)
     if (self.loginViewController == nil)
     {
         [UIView beginAnimations:nil context:nil];
@@ -350,7 +360,7 @@
     // Show the confirmation.
 
     UIActionSheet *alert = [[UIActionSheet alloc] 
-                          initWithTitle: NSLocalizedString(@"We suggest to add photo for your point",nil)
+                          initWithTitle: NSLocalizedString(@"Please add photo for your point",nil)
                           delegate: self
                           cancelButtonTitle: NSLocalizedString(@"Cancel",nil)
                           destructiveButtonTitle: NSLocalizedString(@"Skip Photo",nil)

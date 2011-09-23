@@ -55,7 +55,7 @@
 - (id)initWithOverlay:(id <MKOverlay>)overlay
 {
     if (self = [super initWithOverlay:overlay]) {
-        tileAlpha = 0.0; // 0.75 // base map alpha
+        tileAlpha = 1.0; // 0.75 // base map alpha
     }
     return self;
 }

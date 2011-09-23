@@ -10,6 +10,7 @@
 
 @class Do_ItViewController;
 @class Do_ItAppDelegate;
+@class LoginViewController;
 
 @interface LoginViewController : UIViewController <UITextFieldDelegate>
 {

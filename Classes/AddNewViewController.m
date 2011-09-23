@@ -183,6 +183,7 @@
     [self.navigationController setNavigationBarHidden:NO];
     [self.myTableView reloadData];
     self.loadingBackground.alpha = 0.0;
+    [self.myTableView reloadData];
 }
 
 - (void)viewWillDisappear:(BOOL)animated
@@ -266,7 +267,28 @@
             [request addData:[self.collectedData objectForKey:key] forKey:key];
         }
     }
-    [request setRequestCookies:nil];
+
+    NSLog(@"earlier cookies found: %d email %@",[[[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:url] count],[[parent settings] valueForKey:@"mail"] );
+
+    if([[parent settings] valueForKey:@"mail"] == nil){
+        [request setRequestCookies:nil];
+    }else{
+        /*
+        NSLog(@"set cookie %@ %@",sessionName,sessionId);
+        //Create a cookie
+        NSDictionary *properties = [[[NSMutableDictionary alloc] init] autorelease];
+        [properties setValue:sessionId forKey:NSHTTPCookieValue];
+        [properties setValue:sessionName forKey:NSHTTPCookieName];
+        [properties setValue:@".letsdoitworld.org" forKey:NSHTTPCookieDomain];
+        [properties setValue:[NSDate dateWithTimeIntervalSinceNow:60*60] forKey:NSHTTPCookieExpires];
+        [properties setValue:@"/" forKey:NSHTTPCookiePath];
+        NSHTTPCookie *cookie = [[[NSHTTPCookie alloc] initWithProperties:properties] autorelease];
+       // [request setUseCookiePersistence:NO];
+        [request setRequestCookies:[NSMutableArray arrayWithObject:cookie]]; // for this request
+        [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie]; // save for later
+         */
+    }
+    
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDuration:1.0];
     [self.loadingActivityIndicator startAnimating];
@@ -373,19 +395,6 @@
             if(self.mapView == nil){
                 self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 300.0f, 120.0f)];
                 self.mapView.delegate=self;
-                
-                // OpenStreetMap based on http://wiki.openstreetmap.org/wiki/OSM_in_MapKit
-                overlay = [[TileOverlay alloc] initOverlay];
-                [mapView addOverlay:overlay];
-              /*  MKMapRect visibleRect = [mapView mapRectThatFits:overlay.boundingMapRect];
-                visibleRect.size.width /= 2;
-                visibleRect.size.height /= 2;
-                visibleRect.origin.x += visibleRect.size.width / 2;
-                visibleRect.origin.y += visibleRect.size.height / 2;
-                mapView.visibleMapRect = visibleRect;
-                */
-                //    self.mapView.mapType = MKMapTypeHybrid;
-                
             }
             
             CLLocation* location = CLLocationCoordinate2DIsValid(imageLocation.coordinate) ? imageLocation : parent.locationManager.location;
@@ -429,6 +438,29 @@
             }
             
             mapView.showsUserLocation = YES;
+            
+            if([[self.parent.settings valueForKey:@"map"] isEqualToString: @"1"] || [self.parent.settings valueForKey:@"map"] == nil){
+                // add OpenStreetMap overlay
+                if(overlay == nil){
+                    overlay = [[TileOverlay alloc] initOverlay];
+                }
+                [mapView addOverlay:overlay];
+            }
+            
+            if([[self.parent.settings valueForKey:@"map"] isEqualToString: @"2"]){
+                [mapView setMapType:MKMapTypeStandard];
+                if(overlay != nil){
+                    [mapView removeOverlay: overlay];
+                }
+            }
+            
+            if([[self.parent.settings valueForKey:@"map"] isEqualToString: @"3"]){
+                [mapView setMapType:MKMapTypeHybrid];
+                if(overlay != nil){
+                    [mapView removeOverlay: overlay];
+                }
+            }
+            
             [cell.contentView addSubview:mapView];
             break;
 

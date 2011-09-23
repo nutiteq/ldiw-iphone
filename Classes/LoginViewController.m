@@ -181,7 +181,8 @@
                            if(!error2)
                            {
                                NSLog(@"%@", resultsDictionary);
-                               
+                               NSDictionary *userDictionary = [resultsDictionary objectForKey:@"user"];
+
                                if (self.parent.addNewViewController == nil)
                                {
                                    self.parent.addNewViewController = [[AddNewViewController alloc] init];
@@ -190,6 +191,22 @@
                                
                                self.parent.addNewViewController.sessionId = [resultsDictionary objectForKey:@"sessid"];
                                self.parent.addNewViewController.sessionName = [resultsDictionary objectForKey:@"session_name"];
+                               
+                               [self.parent.settings setValue:[userDictionary objectForKey:@"mail"] forKey:@"mail"];
+                               
+                               // set the cookie (from http://stackoverflow.com/questions/5954382/ios-is-it-possible-to-set-a-cookie-manually-using-sharedhttpcookiestorage-for-a)
+                               
+                               NSMutableDictionary *cookieProperties = [NSMutableDictionary dictionary];
+                               [cookieProperties setValue:self.parent.addNewViewController.sessionName forKey:NSHTTPCookieName];
+                               [cookieProperties setValue:self.parent.addNewViewController.sessionId forKey:NSHTTPCookieValue];
+                               [cookieProperties setValue:@".letsdoitworld.org" forKey:NSHTTPCookieDomain];
+                               [cookieProperties setValue:[NSDate dateWithTimeIntervalSinceNow:60*60] forKey:NSHTTPCookieExpires];
+                               [cookieProperties setValue:@"/" forKey:NSHTTPCookiePath];
+                               [cookieProperties setValue:@"0" forKey:NSHTTPCookieVersion];
+                               
+                               NSHTTPCookie *cookie = [NSHTTPCookie cookieWithProperties:cookieProperties];
+                               [[NSHTTPCookieStorage sharedHTTPCookieStorage] setCookie:cookie];
+                               
                                
                                dispatch_async(dispatch_get_main_queue(), ^
                                               {
@@ -200,7 +217,6 @@
                                                   [UIView commitAnimations];
                                                   
                                                   [self.appDelegate.navigationController dismissModalViewControllerAnimated:YES];
-                                                  [self.appDelegate.navigationController pushViewController:self.parent.addNewViewController animated:YES];
                                               });
                            }
                            else

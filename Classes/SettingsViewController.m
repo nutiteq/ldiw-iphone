@@ -9,10 +9,12 @@
 #import "SettingsViewController.h"
 #import "Do_ItViewController.h"
 #import "EditSettingsViewController.h"
+#import "LoginViewController.h"
+
 
 @implementation SettingsViewController
 
-@synthesize parent, myTableView, editSettingsViewController;
+@synthesize parent, myTableView, editSettingsViewController,loginViewController;
 
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
@@ -63,6 +65,7 @@
 {
     self.navigationItem.hidesBackButton = YES;
     [self.navigationController setNavigationBarHidden:NO];
+    [self.myTableView reloadData];
 }
 
 - (void)viewDidUnload
@@ -86,60 +89,120 @@
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath 
 {
     static NSString *CellIdentifier = @"Cell";
+    NSUInteger section = [indexPath section];
 	NSUInteger index = [indexPath row];
+    
     UITableViewCell *cell = (UITableViewCell *)[tableView dequeueReusableCellWithIdentifier:CellIdentifier];
 	if(cell == nil) 
     {
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
 		cell.opaque = NO;
 	}
-    if (index == 0)
-    {
-        cell.textLabel.text = @"Map area size";
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+    switch(section){
+        case 0:
+            switch(index){
+                case 0:
+                    cell.textLabel.text = @"Map area size";
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+                case 1:
+                    cell.textLabel.text = @"Maximum number of results";
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+                case 2:
+                    cell.textLabel.text = @"Map type";
+                    cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+                    break;
+            }
+            break;
+        case 1:
+            
+            if([self.parent.settings valueForKey:@"mail"] == nil){
+                cell.textLabel.text = @"Login";
+            }else{
+                cell.textLabel.text = [NSString stringWithFormat:@"Logout %@",[self.parent.settings valueForKey:@"mail"]];
+            }
+            cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
+            break;
     }
-    if (index == 1)
-    {
-        cell.textLabel.text = @"Maximum number of results";
-        cell.accessoryType = UITableViewCellAccessoryDisclosureIndicator;
-    }
+    
     return cell;
 }
 
 - (void) tableView: (UITableView *) tableView didSelectRowAtIndexPath: (NSIndexPath *) indexPath 
 {
+    NSUInteger section = [indexPath section];
     NSInteger index = [indexPath row];
-    if (index == 0)
+    
+    if (self.editSettingsViewController == nil)
     {
-        if (self.editSettingsViewController == nil)
-        {
-            self.editSettingsViewController = [[EditSettingsViewController alloc] init];
-            self.editSettingsViewController.parent = self.parent;
-        }
-        self.editSettingsViewController.showView = @"tableView";
-        [self.navigationController pushViewController:self.editSettingsViewController animated:YES];
+        self.editSettingsViewController = [[EditSettingsViewController alloc] init];
+        self.editSettingsViewController.parent = self.parent;
     }
-    if (index == 1)
-    {
-        if (self.editSettingsViewController == nil)
-        {
-            self.editSettingsViewController = [[EditSettingsViewController alloc] init];
-            self.editSettingsViewController.parent = self.parent;
-        }
-        self.editSettingsViewController.showView = @"pickerView";
-        [self.navigationController pushViewController:self.editSettingsViewController animated:YES];
+    switch(section){
+        case 0:
+            switch(index){
+                case 0:
+                    self.editSettingsViewController.showView = @"tableView";
+                    [self.navigationController pushViewController:self.editSettingsViewController animated:YES];
+                    break;
+                case 1:
+                    self.editSettingsViewController.showView = @"pickerView";
+                    [self.navigationController pushViewController:self.editSettingsViewController animated:YES];
+                    break;
+                case 2:
+                    self.editSettingsViewController.showView = @"mapTypeView";
+                    [self.navigationController pushViewController:self.editSettingsViewController animated:YES];
+                    break;
+            }
+            break;
+        case 1:
+            
+           if([self.parent.settings valueForKey:@"mail"] == nil){
+               // login
+               if (self.loginViewController == nil)
+               {
+                   
+                   dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
+                                  {
+                                      self.loginViewController = [[LoginViewController alloc] init];
+                                      self.loginViewController.parent = self.parent;
+                                      
+                                      dispatch_async(dispatch_get_main_queue(), ^
+                                                     {
+                                                         [self.navigationController presentModalViewController:loginViewController animated:YES];
+                                                     });
+                                  });
+               }else{
+                   [self.navigationController presentModalViewController:loginViewController animated:YES];
+               }
+           }else{
+               // logout and clean cookie
+               [self.parent.settings setValue:nil forKey:@"mail"];
+               
+               NSURL *url = [NSURL URLWithString:self.parent.serverUrl];
+               NSHTTPCookie *cookie = [[[NSHTTPCookieStorage sharedHTTPCookieStorage] cookiesForURL:url] objectAtIndex:0];
+               [[NSHTTPCookieStorage sharedHTTPCookieStorage] deleteCookie:cookie];
+               [self.myTableView reloadData];
+           }
+
+            break;
     }
 	[tableView deselectRowAtIndexPath:indexPath animated:YES];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section 
 {
-    return [self.parent.settings count];
+    if(section == 0){
+        return 3; // [self.parent.settings count];
+    }else{
+        return 1;
+    }
 }
 
 - (NSInteger)numberOfSectionsInTableView:(UITableView *)tableView
 {
-    return 1;
+    return 2;
 }
 
 #pragma mark - My methods

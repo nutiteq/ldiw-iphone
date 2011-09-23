@@ -110,7 +110,7 @@
             [self.pickerView selectRow:(([setting intValue]/10)-1) inComponent:0 animated:NO];
         }
     }
-    if (self.showView == @"tableView")
+    if (self.showView == @"tableView" || self.showView == @"mapTypeView")
     {
         self.myTableView.alpha = 1.0;
         self.myPickerView.alpha = 0.0;
@@ -118,6 +118,7 @@
         
         [self.myTableView reloadData];
     }
+
     self.navigationItem.hidesBackButton = YES;
     [self.navigationController setNavigationBarHidden:NO];
 }
@@ -172,59 +173,120 @@
 		cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleValue1 reuseIdentifier:CellIdentifier] autorelease];
 		cell.opaque = NO;
 	}
-    if (index == 0)
-    {
-        cell.textLabel.text = @"Small area";
-        if ([self.parent.settings valueForKey:@"bbox"] == @"1" || [[self.parent.settings valueForKey:@"bbox"] intValue] == 1)
+    
+    if(self.showView == @"tableView"){
+        if (index == 0)
         {
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            cell.textLabel.text = @"Small area";
+            if ([self.parent.settings valueForKey:@"bbox"] == @"1" || [[self.parent.settings valueForKey:@"bbox"] intValue] == 1)
+            {
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            }
+            else
+            {
+                cell.accessoryType = UITableViewCellAccessoryNone;
+            }
         }
-        else
+        if (index == 1)
         {
-            cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.textLabel.text = @"Medium area";
+            if ([self.parent.settings valueForKey:@"bbox"] == @"2" || [[self.parent.settings valueForKey:@"bbox"] intValue] == 2)
+            {
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            }
+            else
+            {
+                cell.accessoryType = UITableViewCellAccessoryNone;
+            }
         }
+        if (index == 2)
+        {
+            cell.textLabel.text = @"Large area";
+            if ([self.parent.settings valueForKey:@"bbox"] == @"3" || [[self.parent.settings valueForKey:@"bbox"] intValue] == 3)
+            {
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            }
+            else
+            {
+                cell.accessoryType = UITableViewCellAccessoryNone;
+            }
+        }
+        
     }
-    if (index == 1)
-    {
-        cell.textLabel.text = @"Medium area";
-        if ([self.parent.settings valueForKey:@"bbox"] == @"2" || [[self.parent.settings valueForKey:@"bbox"] intValue] == 2)
+        
+    if(self.showView == @"mapTypeView"){
+        if (index == 0)
         {
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            cell.textLabel.text = @"OpenStreetMap";
+            if ([self.parent.settings valueForKey:@"map"] == @"1" || [[self.parent.settings valueForKey:@"map"] intValue] == 1  || [self.parent.settings valueForKey:@"map"] == nil)
+            {
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            }
+            else
+            {
+                cell.accessoryType = UITableViewCellAccessoryNone;
+            }
         }
-        else
+        if (index == 1)
         {
-            cell.accessoryType = UITableViewCellAccessoryNone;
+            cell.textLabel.text = @"Google Map";
+            if ([self.parent.settings valueForKey:@"map"] == @"2" || [[self.parent.settings valueForKey:@"map"] intValue] == 2)
+            {
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            }
+            else
+            {
+                cell.accessoryType = UITableViewCellAccessoryNone;
+            }
         }
+        if (index == 2)
+        {
+            cell.textLabel.text = @"Google Satellite";
+            if ([self.parent.settings valueForKey:@"map"] == @"3" || [[self.parent.settings valueForKey:@"map"] intValue] == 3)
+            {
+                cell.accessoryType = UITableViewCellAccessoryCheckmark;
+            }
+            else
+            {
+                cell.accessoryType = UITableViewCellAccessoryNone;
+            }
+        }
+        
     }
-    if (index == 2)
-    {
-        cell.textLabel.text = @"Large area";
-        if ([self.parent.settings valueForKey:@"bbox"] == @"3" || [[self.parent.settings valueForKey:@"bbox"] intValue] == 3)
-        {
-            cell.accessoryType = UITableViewCellAccessoryCheckmark;
-        }
-        else
-        {
-            cell.accessoryType = UITableViewCellAccessoryNone;
-        }
-    }
-    return cell;
+
+        return cell;
 }
 
 - (void) tableView: (UITableView *) tableView didSelectRowAtIndexPath: (NSIndexPath *) indexPath 
 {
     NSInteger index = [indexPath row];
-    if (index == 0)
-    {
-        [self.parent.settings setValue:@"1" forKey:@"bbox"];
+    if(self.showView == @"tableView"){
+        if (index == 0)
+        {
+            [self.parent.settings setValue:@"1" forKey:@"bbox"];
+        }
+        if (index == 1)
+        {
+            [self.parent.settings setValue:@"2" forKey:@"bbox"];
+        }
+        if (index == 2)
+        {
+            [self.parent.settings setValue:@"3" forKey:@"bbox"];
+        }
     }
-    if (index == 1)
-    {
-        [self.parent.settings setValue:@"2" forKey:@"bbox"];
-    }
-    if (index == 2)
-    {
-        [self.parent.settings setValue:@"3" forKey:@"bbox"];
+    if(self.showView == @"mapTypeView"){
+        if (index == 0)
+        {
+            [self.parent.settings setValue:@"1" forKey:@"map"];
+        }
+        if (index == 1)
+        {
+            [self.parent.settings setValue:@"2" forKey:@"map"];
+        }
+        if (index == 2)
+        {
+            [self.parent.settings setValue:@"3" forKey:@"map"];
+        }        
     }
     
     NSLog(@"%@", self.parent.settings);
