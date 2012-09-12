@@ -63,8 +63,8 @@
 	self.navigationItem.leftBarButtonItem = backButton;
 	
 	mapView.showsUserLocation = YES;
-	
-	[self loadInfo];
+	[self initMap];
+//	[self loadInfo];
 }
 
 - (void)viewWillAppear:(BOOL)animated
@@ -124,8 +124,9 @@
 
 - (IBAction)switchViews
 {
-	if(self.mapView.alpha == 0) 
+	if(self.mapView.alpha == 0)
 	{
+        // map view
 		[self.navigationController setNavigationBarHidden:YES];
 		self.mapView.alpha = 1;
         self.osmLabel.alpha = 1;
@@ -135,6 +136,7 @@
 	} 
 	else 
 	{
+        // list view
 		[self.navigationController setNavigationBarHidden:NO];
 		self.mapView.alpha = 0;
         self.osmLabel.alpha = 0;
@@ -145,7 +147,7 @@
 }
 
 #pragma mark -
-#pragma mark MKMapView delegate mathods
+#pragma mark MKMapView delegate methods
 
 - (MKAnnotationView *)mapView:(MKMapView *)_mapView viewForAnnotation:(id <MKAnnotation>)annotation 
 {
@@ -253,7 +255,8 @@
     [UIView commitAnimations];
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^
                    {
-                       self.nearestPoints = [self getNearestPoints:parent.locationManager.location];
+                   //    self.nearestPoints = [self getNearestPoints:parent.locationManager.location];
+                       self.nearestPoints = [self getBboxPoints: mapView.region];
                        dispatch_async(dispatch_get_main_queue(), ^
                                       {
                                           [UIView beginAnimations:nil context:nil];
@@ -275,8 +278,16 @@
                                               [alert release];
  
                                           }
-                                          [self initMap];
+                                         // [self initMap];
                                           [self.myTableView reloadData];
+                                          
+                                          for(NSDictionary *point in self.nearestPoints)
+                                          {
+                                              PointAnnotation *annotation = [[PointAnnotation alloc] initWithPointData:point];
+                                              [mapView addAnnotation:annotation];
+                                              [annotation release];
+                                          }
+
                                       });
                    });
 }
@@ -295,12 +306,7 @@
 	mapView.region = MKCoordinateRegionMakeWithDistance(location, 10000,10000);
 	[mapView regionThatFits:region];
     
-    for(NSDictionary *point in self.nearestPoints) 
-	{
-		PointAnnotation *annotation = [[PointAnnotation alloc] initWithPointData:point];
-		[mapView addAnnotation:annotation];
-		[annotation release];
-	} 
+    [self loadInfo];
     
 }
 
@@ -378,6 +384,63 @@
     }
     return nil;
 }
+
+- (NSMutableArray *)getBboxPoints:(MKCoordinateRegion)region
+{
+    double latMin  = region.center.latitude  - (region.span.latitudeDelta  / 2.0);
+    double longMax = region.center.longitude + (region.span.longitudeDelta / 2.0);
+    double latMax  = region.center.latitude  + (region.span.latitudeDelta  / 2.0);
+    double longMin = region.center.longitude - (region.span.longitudeDelta / 2.0);
+    
+	NSString *bbox = [NSString stringWithFormat:@"%g,%g,%g,%g", longMin,latMin,longMax,latMax];
+    NSString *serverUrl = parent.serverUrl;
+    NSString *str = [NSString stringWithFormat:@"%@/waste_points.csv&BBOX=%@&max_results=100", serverUrl, bbox];
+    NSLog(@"%@", str);
+    NSURL *myURL = [NSURL URLWithString:str];
+    ASIHTTPRequest *request = [ASIHTTPRequest requestWithURL:myURL];
+    [request startSynchronous];
+    NSError *error = [request error];
+    if (!error)
+    {
+        NSString *csv = [request responseString];
+        NSArray *rows = [NSArray arrayWithContentsOfCSVString:csv encoding:NSUTF8StringEncoding error:nil];
+ 
+        NSMutableArray *mutableArray = [NSMutableArray array];
+        for (int i = 1; i < [rows count] - 1; i++)
+        {
+            NSMutableDictionary *dic = [[NSMutableDictionary alloc] init];
+            for (int j = 0; j < [[rows objectAtIndex:0] count]; j++)
+            {
+                [dic setObject:[[rows objectAtIndex:i] objectAtIndex:j] forKey:[[rows objectAtIndex:0] objectAtIndex:j]];
+            }
+            [mutableArray addObject:dic];
+            [dic release];
+        }
+        
+        NSArray* sortedArray = [mutableArray sortedArrayUsingComparator:^(id obj1, id obj2){
+            float v1 = [(NSString*) [obj1 objectForKey:@"distance_meters"] floatValue];
+            float v2 = [(NSString*) [obj2 objectForKey:@"distance_meters"] floatValue];
+            
+            if (v1 > v2) {
+                return (NSComparisonResult)NSOrderedDescending;
+            } else if (v1 < v2) {
+                return (NSComparisonResult)NSOrderedAscending;
+            }
+            return (NSComparisonResult)NSOrderedSame;
+        }];
+        
+        
+        //  NSLog(@"SORTED: \n%@", sortedArray);
+        
+        return [sortedArray mutableCopy];
+    }
+    else
+    {
+        return nil;
+    }
+    return nil;
+}
+
 
 
 - (NSString *)getDistanceToPoint:(NSDictionary *)point

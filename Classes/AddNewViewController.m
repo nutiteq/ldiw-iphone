@@ -396,9 +396,18 @@
                 self.mapView = [[MKMapView alloc] initWithFrame:CGRectMake(0.0f, 0.0f, 300.0f, 120.0f)];
                 self.mapView.delegate=self;
             }
+ 
+            CLLocation* location;
+            if(imageLocation != nil && CLLocationCoordinate2DIsValid(imageLocation.coordinate)){
+                location = imageLocation;
+            }else{
+                location = parent.locationManager.location;
+            }
+//            
+//            CLLocation* location = CLLocationCoordinate2DIsValid(imageLocation.coordinate) ? imageLocation : parent.locationManager.location;
             
-            CLLocation* location = CLLocationCoordinate2DIsValid(imageLocation.coordinate) ? imageLocation : parent.locationManager.location;
-
+            NSLog(@"location: %@ locationManager %@ imageLocation %@",location, parent.locationManager.location,imageLocation);
+            
             [mapView removeAnnotations:[mapView annotations]];
             
             CLLocationCoordinate2D coord = {

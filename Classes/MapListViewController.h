@@ -51,6 +51,7 @@
 
 - (IBAction)switchViews;
 - (NSMutableArray *)getNearestPoints:(CLLocation *)center;
+- (NSMutableArray *)getBboxPoints:(MKCoordinateRegion)region;
 - (void)initMap;
 - (NSString *)getDistanceToPoint:(NSDictionary *)point;
 - (void)backButtonPressed;
