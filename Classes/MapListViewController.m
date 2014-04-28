@@ -44,12 +44,13 @@
     self.loadingBackground.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"loading_bg.png"]];
 	self.myTableView.alpha = 0;
     
-    self.mapBackButton = [[UIButton alloc] initWithFrame:CGRectMake(5, 7, 55, 30)];
+   self.mapBackButton = [[UIButton alloc] initWithFrame:CGRectMake(20, 30, 55, 30)];
 	[self.mapBackButton setBackgroundImage:[UIImage imageNamed:@"back.png"] forState:UIControlStateNormal];
 	[self.mapBackButton addTarget:self action:@selector(backButtonPressed) forControlEvents:UIControlEventTouchUpInside];
+  
 	[self.view addSubview:self.mapBackButton];
 	
-	self.mapRefreshButton = [[UIButton alloc] initWithFrame:CGRectMake(242, 7, 70, 30)];
+	self.mapRefreshButton = [[UIButton alloc] initWithFrame:CGRectMake(242, 30, 70, 30)];
 	[self.mapRefreshButton setBackgroundImage:[UIImage imageNamed:@"refresh.png"] forState:UIControlStateNormal];
 	[self.mapRefreshButton addTarget:self action:@selector(refreshButtonPressed) forControlEvents:UIControlEventTouchUpInside];
 	[self.view addSubview:self.mapRefreshButton];

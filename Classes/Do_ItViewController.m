@@ -17,7 +17,7 @@
 #import "LoginViewController.h"
 #import "Reachability.h"
 #import <dispatch/dispatch.h>
-#import "FlurryAPI.h"
+#import "Flurry.h"
 #import "UIImage+ProportionalFill.h"
 #import "jpeg-data.h"
 #import <AssetsLibrary/AssetsLibrary.h>
@@ -50,7 +50,7 @@
     [super viewDidLoad];
 	self.appDelegate = [[UIApplication sharedApplication] delegate];
     
-    NSLog(@"UDID: %@", [[UIDevice currentDevice] uniqueIdentifier]);
+//    NSLog(@"UDID: %@", [[UIDevice currentDevice] uniqueIdentifier]);
     
     self.title = @"";
     self.loadingBackground.backgroundColor = [UIColor colorWithPatternImage:[UIImage imageNamed:@"loading_bg.png"]];
@@ -510,7 +510,7 @@
 - (void)locationManager:(CLLocationManager *)manager didUpdateToLocation:(CLLocation *)newLocation fromLocation:(CLLocation *)oldLocation 
 {
 //	NSLog(@"Current coordinates: %g %g", locationManager.location.coordinate.latitude, locationManager.location.coordinate.longitude);
-    [FlurryAPI setLatitude:locationManager.location.coordinate.latitude
+    [Flurry setLatitude:locationManager.location.coordinate.latitude
                  longitude:locationManager.location.coordinate.longitude
         horizontalAccuracy:locationManager.location.horizontalAccuracy
           verticalAccuracy:locationManager.location.verticalAccuracy]; 

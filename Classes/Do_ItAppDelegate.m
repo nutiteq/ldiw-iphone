@@ -8,7 +8,7 @@
 
 #import "Do_ItAppDelegate.h"
 #import "Do_ItViewController.h"
-#import "FlurryAPI.h"
+#import "Flurry.h"
 
 @implementation UINavigationBar (UINavigationBarCategory)
 
@@ -42,7 +42,7 @@
 
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions 
 {    
-    [FlurryAPI startSession:@"18W7IK7YRL1FHZVKE6WM"];
+    [Flurry startSession:@"18W7IK7YRL1FHZVKE6WM"];
     
     // Override point for customization after application launch.
 	NSString *path = [[NSBundle mainBundle] bundlePath];

@@ -202,7 +202,7 @@
 - (void)add
 {
     // unique ID
-	NSString *myStr = [NSString stringWithFormat:@"%@%@", [[UIDevice currentDevice] uniqueIdentifier], @"doit"];
+	NSString *myStr = @"doit";
 	const char *cStr = [myStr UTF8String];
     unsigned char result[16];
     CC_MD5(cStr, strlen(cStr), result);
